@@ -3,23 +3,36 @@ package org.example;
 import java.util.*;
 
 class ContactService {
-    static List<Contact> contacts = new ArrayList<>();
+    private final List<Contact> contacts = new ArrayList<>(); // No es estático, se maneja por instancia
 
-    void addContact(Contact c) {
+    // Agregar contacto
+    public void addContact(Contact c) {
         contacts.add(c);
     }
 
-    Contact findContact(String name) {
-        for (Contact c : contacts) if (c.name.equals(name)) return c;
-        return null;
+    // Buscar contacto
+    public Optional<Contact> findContact(String name) {
+        return contacts.stream().filter(c -> c.getName().equals(name)).findFirst();
     }
 
-    void deleteContact(String name) {
-        for (int i = 0; i < contacts.size(); i++) if (contacts.get(i).name.equals(name)) contacts.remove(i);
+    // Eliminar contacto
+    public void deleteContact(String name) {
+        Iterator<Contact> iterator = contacts.iterator();
+        while (iterator.hasNext()) {
+            Contact c = iterator.next();
+            if (c.getName().equals(name)) {
+                iterator.remove();
+                break; // Se de tiene el bucle al momento de encontrar el contacto
+            }
+        }
     }
 
-    void printContacts() {
-        if (contacts.size() == 0) System.out.println("No contacts.");
-        else for (Contact c : contacts) System.out.println("Name: " + c.name + ", Phone: " + c.phone);
+    // Mostrar contactos
+    public void printContacts() {
+        if (contacts.isEmpty()) {
+            System.out.println("No existen contacos guardados");
+        } else {
+            contacts.forEach(c -> System.out.println("Nombre: " + c.getName() + ", Telefono: " + c.getPhone()));
+        }
     }
 }
